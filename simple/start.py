@@ -26,8 +26,8 @@ def show_diff_map():
     diff = estimated - exact
     fig, ax = plt.subplots()
 
-    norm = colors.CenteredNorm(vcenter=0)
-    cp = ax.contourf(space[1], space[0], diff, 20, cmap='seismic', norm=norm)
+    norm = colors.CenteredNorm(vcenter=0, clip=True, halfrange=15)
+    cp = ax.contourf(space[1], space[0], diff, 200, cmap='seismic', norm=norm)
 
     ax.set_xlabel('Distance [m]')
     ax.set_ylabel('Angle [\N{degree sign}]')
@@ -59,20 +59,22 @@ ax.set_xlabel('Distance [m]')
 ax.set_ylabel('Velocity [m/s]')
 ax.set_xlim(dist_range)
 ax.set_ylim(vel_range)
+ax.set_title('Velocities comparison')
 ax.grid()
 
 # move main plot
-plt.subplots_adjust(bottom=0.25)
+plt.subplots_adjust(left=0.20, bottom=0.15)
 
 
-# distance slider
-ax_alpha = plt.axes([0.25, 0.1, 0.65, 0.03])
+# angle slider
+ax_alpha = plt.axes([0.06, 0.15, 0.0225, 0.73])
 alpha_slider = Slider(
     ax=ax_alpha,
     label='Angle [\N{degree sign}]',
     valmin=alpha_range[0],
     valmax=alpha_range[1],
     valinit=init_alpha,
+    orientation='vertical',
 )
 
 
