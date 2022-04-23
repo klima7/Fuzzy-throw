@@ -41,38 +41,37 @@ ax.set_ylim([0, 70])
 ax.grid()
 
 # move main plot
-plt.subplots_adjust(left=0.30, bottom=0.25)
+plt.subplots_adjust(left=0.20, bottom=0.3)
 
 
 # distance slider
-ax_alpha = plt.axes([0.25, 0.1, 0.65, 0.03])
+ax_alpha = plt.axes([0.06, 0.25, 0.0225, 0.63])
 alpha_slider = Slider(
     ax=ax_alpha,
     label='Angle [\N{degree sign}]',
     valmin=10,
     valmax=80,
     valinit=init_alpha,
+    orientation='vertical'
 )
 
-ax_weight = plt.axes([0.15, 0.25, 0.0225, 0.63])
+ax_weight = plt.axes([0.20, 0.15, 0.70, 0.03])
 weight_slider = Slider(
     ax=ax_weight,
-    label='Weight\n[kg]',
+    label='Weight [kg]',
     valmin=1,
     valmax=6,
     valinit=init_weight,
-    orientation='vertical'
 )
 
 
-ax_drag = plt.axes([0.06, 0.25, 0.0225, 0.63])
+ax_drag = plt.axes([0.20, 0.10, 0.70, 0.03])
 drag_slider = Slider(
     ax=ax_drag,
-    label='Drag\n[1]',
+    label='Drag [1]',
     valmin=0.01,
     valmax=2,
     valinit=init_drag,
-    orientation='vertical'
 )
 
 
