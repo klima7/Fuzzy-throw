@@ -1,7 +1,8 @@
 import numpy as np
+from matplotlib import colors
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider, Button
-from fuzzy import get_velocity_fuzzy
+from fuzzy import get_velocity_fuzzy, alpha_range, dist_range, vel_range
 
 
 # function to plot
@@ -11,10 +12,36 @@ def get_velocity_exact(alpha, distance):
     return np.sqrt(num / denom)
 
 
+def show_diff_map():
+    resolution = 50
+    alpha_values = np.linspace(alpha_range[0], alpha_range[1], resolution)
+    dist_values = np.linspace(dist_range[0], dist_range[1], resolution)
+
+    space = np.meshgrid(alpha_values, dist_values)
+    space_flat = np.dstack([*space]).reshape(-1, 2)
+
+    exact = get_velocity_exact(space[0], space[1])
+    estimated = get_velocity_fuzzy(space_flat[:, 0], space_flat[:, 1]).reshape(resolution, resolution)
+
+    diff = estimated - exact
+    fig, ax = plt.subplots()
+
+    norm = colors.CenteredNorm(vcenter=0)
+    cp = ax.contourf(space[1], space[0], diff, 20, cmap='seismic', norm=norm)
+
+    ax.set_xlabel('Distance [m]')
+    ax.set_ylabel('Angle [\N{degree sign}]')
+    ax.set_title('Difference map')
+    fig.colorbar(cp, label='Difference')
+    fig.show()
+
+
+show_diff_map()
+
+
 # parameters
-init_amplitude = 5
-init_alpha = 20
-distances = np.linspace(0, 160, 100)
+init_alpha = sum(alpha_range) / 2
+distances = np.linspace(dist_range[0], dist_range[1], 100)
 
 # figure
 fig, ax = plt.subplots()
@@ -30,8 +57,8 @@ line_fuzzy, = plt.plot(distances, velocities_fuzzy, lw=2)
 # decorations
 ax.set_xlabel('Distance [m]')
 ax.set_ylabel('Velocity [m/s]')
-ax.set_xlim([0, 160])
-ax.set_ylim([0, 70])
+ax.set_xlim(dist_range)
+ax.set_ylim(vel_range)
 ax.grid()
 
 # move main plot
@@ -43,8 +70,8 @@ ax_alpha = plt.axes([0.25, 0.1, 0.65, 0.03])
 alpha_slider = Slider(
     ax=ax_alpha,
     label='Angle [\N{degree sign}]',
-    valmin=10,
-    valmax=80,
+    valmin=alpha_range[0],
+    valmax=alpha_range[1],
     valinit=init_alpha,
 )
 

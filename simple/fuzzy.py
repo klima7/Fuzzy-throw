@@ -4,6 +4,9 @@ from skfuzzy import control as ctrl
 from skfuzzy.control import Antecedent, Consequent, Rule
 import matplotlib.pyplot as plt
 
+alpha_range = (10, 80)
+dist_range = (0, 160)
+vel_range = (0, 70)
 
 alpha = Antecedent(np.arange(10, 80, 1), 'alpha')
 dist = Antecedent(np.arange(0, 160, 1), 'distance')
@@ -46,8 +49,8 @@ vel['xh'] = fuzz.trimf(vel.universe, [51, 70, 70])
 # vel['h'] = fuzz.gaussmf(vel.universe, 52, vel_sigma)
 # vel['xh'] = fuzz.gaussmf(vel.universe, 70, vel_sigma)
 
-vel.view()
-plt.show()
+# vel.view()
+# plt.show()
 
 rules = [
     Rule((alpha['l'] | alpha['h']) & dist['z'], vel['xl']),
