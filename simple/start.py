@@ -32,6 +32,7 @@ def show_diff_map():
     ax.set_xlabel('Distance [m]')
     ax.set_ylabel('Angle [\N{degree sign}]')
     ax.set_title('Difference map')
+    ax.grid()
     fig.colorbar(cp, label='Difference')
     fig.show()
 
@@ -48,11 +49,11 @@ fig, ax = plt.subplots()
 
 # exact velocity plot
 velocities_exact = get_velocity_exact(init_alpha, distances)
-line_exact, = plt.plot(distances, velocities_exact, lw=2)
+line_exact, = plt.plot(distances, velocities_exact, lw=2, label='Exact velocity')
 
 # fuzzy velocity plot
 velocities_fuzzy = get_velocity_fuzzy(init_alpha, distances)
-line_fuzzy, = plt.plot(distances, velocities_fuzzy, lw=2)
+line_fuzzy, = plt.plot(distances, velocities_fuzzy, lw=2, label='Fuzzy velocity')
 
 # decorations
 ax.set_xlabel('Distance [m]')
@@ -61,6 +62,7 @@ ax.set_xlim(dist_range)
 ax.set_ylim(vel_range)
 ax.set_title('Velocities comparison')
 ax.grid()
+ax.legend(loc='upper left')
 
 # move main plot
 plt.subplots_adjust(left=0.20, bottom=0.15)
