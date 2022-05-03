@@ -16,21 +16,27 @@ vel = Consequent(np.arange(0, 70, 1), 'velocity')
 # dist.automf(3, names=['l', 'm', 'h'])
 vel.automf(5, names=['xl', 'l', 'm', 'h', 'xh'])
 
-alpha['l'] = fuzz.trimf(alpha.universe, [10, 10, 45])
-alpha['m'] = fuzz.trimf(alpha.universe, [10, 45, 80])
-alpha['h'] = fuzz.trimf(alpha.universe, [45, 80, 80])
+# alpha['l'] = fuzz.trimf(alpha.universe, [10, 10, 45])
+# alpha['m'] = fuzz.trimf(alpha.universe, [10, 45, 80])
+# alpha['h'] = fuzz.trimf(alpha.universe, [45, 80, 80])
+alpha.automf(5, names=['xl', 'l', 'm', 'h', 'xh'])
 
-dist['z'] = fuzz.gaussmf(dist.universe, 0, 10)
-dist['l'] = fuzz.trimf(dist.universe, [0, 0, 80])
+# dist['z'] = fuzz.trimf(dist.universe, [0, 0, 10])
+# dist['l'] = fuzz.trimf(dist.universe, [0, 10, 80])
+dist['z'] = fuzz.gaussmf(dist.universe, 0, 7)
+dist['l'] = fuzz.trimf(dist.universe, [0, 7, 80])
 dist['m'] = fuzz.trimf(dist.universe, [0, 80, 160])
 dist['h'] = fuzz.trimf(dist.universe, [80, 160, 160])
 
 
-vel['xl'] = fuzz.trimf(vel.universe, [0, 0, 17])
-vel['l'] = fuzz.trimf(vel.universe, [0, 17, 35])
-vel['m'] = fuzz.trimf(vel.universe, [17, 35, 52])
-vel['h'] = fuzz.trimf(vel.universe, [35, 52, 70])
-vel['xh'] = fuzz.trimf(vel.universe, [51, 70, 70])
+# vel['xl'] = fuzz.trimf(vel.universe, [0, 0, 17])
+# vel['l'] = fuzz.trimf(vel.universe, [0, 17, 35])
+# vel['m'] = fuzz.trimf(vel.universe, [17, 35, 52])
+# vel['h'] = fuzz.trimf(vel.universe, [35, 52, 70])
+# vel['xh'] = fuzz.trimf(vel.universe, [51, 70, 70])
+
+vel.automf(9, names=['xxxl', 'xxl', 'xl', 'l', 'm', 'h', 'xh', 'xxh', 'xxxh'])
+vel['zero'] = fuzz.trapmf(vel.universe, [0, 0, 5, 5])
 
 # alpha_sigma = 15
 # alpha['l'] = fuzz.gaussmf(alpha.universe, 10, alpha_sigma)
@@ -49,19 +55,26 @@ vel['xh'] = fuzz.trimf(vel.universe, [51, 70, 70])
 # vel['h'] = fuzz.gaussmf(vel.universe, 52, vel_sigma)
 # vel['xh'] = fuzz.gaussmf(vel.universe, 70, vel_sigma)
 
+# alpha.view()
+vel.view()
 # vel.view()
-# plt.show()
+plt.show()
 
 rules = [
-    Rule((alpha['l'] | alpha['h']) & dist['z'], vel['xl']),
-    Rule((alpha['l'] | alpha['h']) & dist['l'], vel['xl']),
-    Rule((alpha['l'] | alpha['h']) & dist['m'], vel['h']),
-    Rule((alpha['l'] | alpha['h']) & dist['h'], vel['xh']),
+    Rule((alpha['xl'] | alpha['xh']) & dist['z'], vel['zero']),
+    Rule((alpha['xl'] | alpha['xh']) & dist['l'], vel['xl']),
+    Rule((alpha['xl'] | alpha['xh']) & dist['m'], vel['xh']),
+    Rule((alpha['xl'] | alpha['xh']) & dist['h'], vel['xxh']),
 
-    Rule(alpha['m'] & dist['z'], vel['xl']),
-    Rule(alpha['m'] & dist['l'], vel['xl']),
-    Rule(alpha['m'] & dist['m'], vel['m']),
-    Rule(alpha['m'] & dist['h'], vel['h']),
+    Rule((alpha['l'] | alpha['h']) & dist['z'], vel['zero']),
+    Rule((alpha['l'] | alpha['h']) & dist['l'], vel['xxl']),
+    Rule((alpha['l'] | alpha['h']) & dist['m'], vel['m']),
+    Rule((alpha['l'] | alpha['h']) & dist['h'], vel['h']),
+
+    Rule(alpha['m'] & dist['z'], vel['zero']),
+    Rule(alpha['m'] & dist['l'], vel['xxl']),
+    Rule(alpha['m'] & dist['m'], vel['l']),
+    Rule(alpha['m'] & dist['h'], vel['m']),
 ]
 
 throw_ctrl = ctrl.ControlSystem(rules)
