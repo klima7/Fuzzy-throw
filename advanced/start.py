@@ -2,35 +2,21 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider, Button
 from fuzzy import get_velocity_fuzzy
-from drag import get_velocity_with_drag
-
-
-# function to plot
-def get_velocity_exact(alpha, distances, weight, drag):
-    velocities = []
-    for distance in distances:
-        velocity = get_velocity_with_drag(alpha, distance, weight, drag)
-        velocities.append(velocity)
-    return np.array(velocities)
 
 
 # parameters
 init_amplitude = 5
 init_alpha = 45
 init_weight = 3.5
-init_drag = 1
+init_drag = 0.5
 
-distances = np.linspace(0, 160, 10)
+distances = np.linspace(0, 160, 80)
 
 # figure
 fig, ax = plt.subplots()
 
-# exact velocity plot
-velocities_exact = get_velocity_exact(init_alpha, distances, init_weight, init_drag)
-line_exact, = plt.plot(distances, velocities_exact, lw=2)
-
 # fuzzy velocity plot
-velocities_fuzzy = get_velocity_fuzzy(init_alpha, distances)
+velocities_fuzzy = get_velocity_fuzzy(init_alpha, distances, init_drag, init_weight)
 line_fuzzy, = plt.plot(distances, velocities_fuzzy, lw=2)
 
 # decorations
@@ -69,8 +55,8 @@ ax_drag = plt.axes([0.20, 0.10, 0.70, 0.03])
 drag_slider = Slider(
     ax=ax_drag,
     label='Drag [1]',
-    valmin=0.01,
-    valmax=2,
+    valmin=0,
+    valmax=1,
     valinit=init_drag,
 )
 
@@ -85,12 +71,8 @@ def update(val):
     weight = weight_slider.val
     drag = drag_slider.val
 
-    # exact update
-    velocities = get_velocity_exact(alpha, distances, weight, drag)
-    line_exact.set_ydata(velocities)
-
     # fuzzy update
-    velocities = get_velocity_fuzzy(alpha, distances)
+    velocities = get_velocity_fuzzy(alpha, distances, drag, weight)
     line_fuzzy.set_ydata(velocities)
 
     fig.canvas.draw_idle()
