@@ -13,7 +13,6 @@ dist = Antecedent(np.arange(0, 160, 1), 'distance')
 vel = Consequent(np.arange(0, 70, 1), 'velocity')
 
 vel.automf(5, names=['xl', 'l', 'm', 'h', 'xh'])
-
 alpha.automf(5, names=['xl', 'l', 'm', 'h', 'xh'])
 
 dist['z'] = fuzz.gaussmf(dist.universe, 0, 7)

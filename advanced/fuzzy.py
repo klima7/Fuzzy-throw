@@ -15,11 +15,8 @@ mass = Antecedent(np.linspace(1, 6, 50), 'mass')
 vel = Consequent(np.arange(0, 70, 1), 'velocity')
 
 vel.automf(5, names=['xl', 'l', 'm', 'h', 'xh'])
-
 alpha.automf(5, names=['xl', 'l', 'm', 'h', 'xh'])
-
 drag.automf(2, names=['l', 'h'])
-
 mass.automf(2, names=['l', 'h'])
 
 dist['z'] = fuzz.gaussmf(dist.universe, 0, 7)
@@ -32,23 +29,10 @@ vel.automf(9, names=['xxxl', 'xxl', 'xl', 'l', 'm', 'h', 'xh', 'xxh', 'xxxh'])
 vel['zero'] = fuzz.trapmf(vel.universe, [0, 0, 5, 5])
 
 
-# mass.view()
 plt.show()
 
 rules = [
     Rule(dist['z'], vel['zero']),
-
-    # Rule((alpha['xl'] | alpha['xh']) & dist['l'], vel['xl']),
-    # Rule((alpha['xl'] | alpha['xh']) & dist['m'], vel['xh']),
-    # Rule((alpha['xl'] | alpha['xh']) & dist['h'], vel['xxh']),
-    #
-    # Rule((alpha['l'] | alpha['h']) & dist['l'], vel['xxl']),
-    # Rule((alpha['l'] | alpha['h']) & dist['m'], vel['m']),
-    # Rule((alpha['l'] | alpha['h']) & dist['h'], vel['h']),
-    #
-    # Rule(alpha['m'] & dist['l'], vel['xxl']),
-    # Rule(alpha['m'] & dist['m'], vel['l']),
-    # Rule(alpha['m'] & dist['h'], vel['m']),
 
     # Low drag
     Rule(drag['l'] & (alpha['xl'] | alpha['xh']) & dist['l'], vel['xl']),
